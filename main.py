@@ -7,19 +7,20 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    # all_data = requests.get('https://api.covid19api.com/summary')
-    # saveData(all_data.json())
+    all_data = requests.get('https://api.covid19api.com/summary')
+    saveData(all_data.json())
 
-    with open('generaldata.json', 'r') as json_file:
-        all_data = json.load(json_file)
+    # if the api is taken down or stops responding uncomment the following two lines inorder to use the saved dummy data in .json files
+    # with open('generaldata.json', 'r') as json_file:
+    #     all_data = json.load(json_file)
 
-    # ww_stats = all_data.json()['Global']
-    ww_stats = all_data['Global']
+    ww_stats = all_data.json()['Global']
+    # ww_stats = all_data['Global']
     rp = int((ww_stats['TotalRecovered']/ww_stats['TotalConfirmed'])*100)
     dp = int((ww_stats['TotalDeaths']/ww_stats['TotalConfirmed'])*100)
 
-    # countries = all_data.json()['Countries']
-    countries = all_data['Countries']
+    countries = all_data.json()['Countries']
+    # countries = all_data['Countries']
     c_to_cases = {}
     top_countries_data = []
     for index in range(len(countries)):
