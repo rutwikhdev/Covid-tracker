@@ -1,0 +1,208 @@
+@font-face {
+    font-family: Anton;
+    src: url(../fonts/Anton-Regular.ttf);
+}
+@font-face {
+    font-family: Lato;
+    src: url(../fonts/Lato-Regular.ttf);
+}
+@font-face {
+    font-family: Lobster;
+    src: url(../fonts/Lobster-Regular.ttf);
+}
+@font-face {
+    font-family: Montserrat;
+    src: url(../fonts/Montserrat-Regular.ttf);
+}
+body {
+    margin: 0;
+    padding: 0;
+    background-color: whitesmoke;
+}
+/* HEADER SECTION */
+header {
+    width: 100%;
+    height: 75px;
+    background-color: #927D88;
+}
+header .title {
+    margin: 0 0 0 25px;
+    line-height: 75px;
+    font-size: 26px;
+    color: #F3F2E9;
+    font-family: Lobster;
+    letter-spacing: 2px;
+}
+/* MAIN SECTION */
+main {
+    display: flex;
+    justify-content: space-evenly;
+    height: fit-content;
+}
+main .global-stats, main .country-stats {
+    display: flex;
+    flex-flow: column;
+    margin-top: 25px;
+    width: 45%;
+}
+main .active-data { 
+    display: flex;
+    justify-content: space-evenly;
+}
+main .global-stats h3 {
+    margin: 20px 0 50px 0;
+    text-align: center;
+    font-family: Anton;
+    font-size: 28px;
+    font-weight: 200;
+    letter-spacing: 1px;
+    color: #928A97;
+}
+main .global-stats .ad-box {
+    /* border: 1px solid black; */
+    box-shadow: 3px 3px 8px grey;
+    border-radius: 20px;
+    padding: 10px 25px;
+    text-align: center;
+}
+main .global-stats .ad-box h2{
+    font-size: 40px;
+    font-family: Anton;
+    letter-spacing: 1px;
+    font-weight: 400;
+}
+main .global-stats .total-cases {
+    background-color: #C8E7F5;
+}
+main .global-stats .recovered {
+    background-color: #D8E2DC;
+}
+main .global-stats .deaths {
+    background-color: #FFCAD4;
+}
+main .global-stats .ad-box p {
+    font-family: Lato;
+}
+main .global-stats .total-cases h2 {
+    color: #044C80;
+}
+main .global-stats .recovered h2 {
+    color: #157574;
+}
+main .global-stats .deaths h2 {
+    color: #761F32;
+}
+main .global-stats .chart-info {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 70px;
+}
+/* CHART */
+main .global-stats .chart-info .chart{
+    height: 400px;
+    width: 400px;
+}
+main .global-stats .chart-info .info p {
+    font-size: 20px;
+    font-family: Montserrat;
+}
+main .country-stats {
+    display: flex;
+    flex-flow: column;
+    justify-content: space-evenly;
+}
+main .country-stats .search-country {
+    height: 200px;
+    text-align: center;
+    /* margin-top: 25px; */
+}
+main .country-stats .search-country .title {
+    color: #928A97;
+    text-align: center;
+    font-size: 28px;
+    font-family: Anton;
+    margin: 10px 0 30px 0;
+}
+main .country-stats .search-country input { 
+    width: 300px;
+    height: 45px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    outline: none;
+    border: 1px solid grey;
+    text-align: center;
+    font-size: 18px;
+    font-family: Lato;
+}
+main .country-stats .search-country button {
+    width: 100px;
+    height: 50px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border: none;
+    outline: none;
+    background-color: #FFE5D9;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-family: Montserrat;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+main .country-stats .search-country button:hover {
+    box-shadow: 3px 3px 8px grey;
+}
+main .country-stats .top-countries {
+    height: 600px;
+    background-color: #927D88;
+    border-radius: 20px;
+}
+main .country-stats .top-countries .top-countries-title {
+    font-family: Anton;
+    font-size: 28px;
+    color: #F3F2E9;
+    margin: 20px 0 30px 20px;
+    text-align: center;
+}
+main .country-stats .top-countries .top-20 {
+    height: 600px;
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+}
+main .country-stats .top-countries .top-20 ol {
+    width: 80%;
+}
+main .country-stats .top-countries .top-20 li {
+    width: 80%;
+    font-family: Lato;
+    font-size: 20px;
+    justify-content: space-between;
+    display: flex;
+    flex-flow: row;
+    margin: 5px 0;
+}
+main .country-stats .top-countries .top-20 li h6, main .country-stats .top-countries .top-20 li p {
+    margin: 0;
+    font-size: 22px;
+    font-family: Lato;
+    color: #F3F2E9;
+}
+hr {
+    color: #F3F2E9;
+}
+@media (max-width: 1385px) {
+    main {
+        margin-top: 75px;
+        flex-flow: column;
+        margin: 0;
+    }
+    main .global-stats {
+        width: 100%;
+    }
+    main .country-stats {
+        width: 80%;
+        margin: 20px auto;
+    }
+  }
+/* FOOTER SECTION */

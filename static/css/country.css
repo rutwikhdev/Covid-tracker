@@ -1,0 +1,119 @@
+@font-face {
+    font-family: Anton;
+    src: url(../fonts/Anton-Regular.ttf);
+}
+@font-face {
+    font-family: Lato;
+    src: url(../fonts/Lato-Regular.ttf);
+}
+@font-face {
+    font-family: Lobster;
+    src: url(../fonts/Lobster-Regular.ttf);
+}
+@font-face {
+    font-family: Montserrat;
+    src: url(../fonts/Montserrat-Regular.ttf);
+}
+body {
+    margin: 0;
+    padding: 0;
+}
+header {
+    width: 100%;
+    height: 75px;
+    background-color: #927D88;
+}
+header .title {
+    margin: 0 0 0 25px;
+    line-height: 75px;
+    font-size: 26px;
+    color: #F3F2E9;
+    font-family: Lobster;
+    letter-spacing: 2px;
+}
+main {
+    display: flex;
+    justify-content: space-evenly;
+    height: fit-content;
+}
+main .section {
+    width: 50%;
+    height: calc(100vh - 75px);
+    padding: 25px;
+}
+main .info h3{
+    font-size: 60px;
+    font-family: Lobster;
+    letter-spacing: 2px;
+    color: #634975;
+    margin-left: 20px;
+}
+main .section .sub-section {
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 50px;
+}
+main .section .sub-section .boxes {
+    margin: 5px;
+    height: 200px;
+    width: 200px;
+    border-radius: 30px;
+    box-shadow: 3px 3px 5px grey;
+    display: flex;
+    flex-flow: column;
+    text-align: center;
+    justify-content: space-evenly;
+    background-image: linear-gradient(120deg,rgb(175, 148, 199, 0.8),rgb(29, 61, 99, 0.8));   
+}
+main .section .sub-section .boxes h4 {
+    font-size: 40px;
+    font-family: Anton;
+    letter-spacing: 2px;
+    margin: 0;
+    color: #F3F2E9;
+    
+}
+main .section .sub-section .boxes p {
+    font-size: 18px;
+    font-family: Lato;
+    margin: 0;
+    text-transform: uppercase;
+    text-decoration: underline;
+    color: #F3F2E9;
+}
+main .section p {
+    font-size: 30px;
+    font-family: Lato;
+    font-weight: bold;
+    margin-left: 25px;
+    color: #634975;
+}
+@media (max-width: 1385px) {
+    main {
+        position: relative;
+        margin-top: 75px;
+        display: flex;
+        flex-flow: column;
+        height: 150vh;
+    }
+    main .info {
+        width: 90%;
+    }
+    main .graph {
+        margin-top: 20px;
+        width: 90%;
+    }
+  }
+
+@media (max-width: 960px) {
+    main {
+        flex-flow: column;
+    }
+    main .info .sub-section {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    main .info h3 {
+        margin-top: 0;
+    }
+}

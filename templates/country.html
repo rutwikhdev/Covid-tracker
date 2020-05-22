@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../static/css/country.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <p class="title">Coronavirus Tracker</p>
+    </header>
+    <main>
+        <div class="info section">
+            <h3>{{ country }}</h3>
+            <div class="sub-section">
+                <div class="boxes">
+                    <h4>{{ latest['Confirmed'] }}</h4>
+                    <p>Total Cases</p>
+                </div>
+                <div class="boxes">
+                    <h4>{{ latest['Recovered'] }}</h4>
+                    <p>Total Recovered</p>
+                </div>
+                <div class="boxes">
+                    <h4>{{ latest['Active'] }}</h4>
+                    <p>Active Cases</p>
+                </div>
+                <div class="boxes">
+                    <h4>{{ latest['Deaths'] }}</h4>
+                    <p>Deaths</p>
+                </div>
+            </div>
+            <p>RECOVERY RATE: {{ rperc }}%</p>
+            <p>DEATH RATE: {{ dperc }}%</p>
+        </div>
+        <div class="graph section">
+            <canvas id="myChart" width="400" height="400"></canvas>
+            <script>
+                var ctx = document.getElementById('myChart');
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Confirmed', 'Recovered', 'Active', 'Deaths'],
+                        datasets: [{
+                            label: 'Total number',
+                            data: [{{ latest['Confirmed']}}, {{ latest['Recovered']}}, {{ latest['Active'] }}, {{ latest['Deaths'] }}],
+                            backgroundColor: [
+                                'rgba(255, 206, 86, 0.6)',
+                                'rgba(75, 192, 192, 0.6)',
+                                'rgba(54, 162, 235, 0.6)',
+                                'rgba(255, 99, 132, 0.6)',
+                            ],
+                            borderColor: [
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 99, 132, 1)',
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </main>
+</body>
+
+</html>

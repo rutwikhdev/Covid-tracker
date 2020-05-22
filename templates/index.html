@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Covid-Tracker</title>
+  <link rel="stylesheet" href="../static/css/index.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+</head>
+
+<body>
+  <header>
+    <p class="title">Coronavirus Tracker</p>
+  </header>
+  <main>
+    <div class="global-stats">
+      <h3>Worldwide Cases</h3>
+      <div class="active-data">
+        <div class="total-cases ad-box">
+          <h2>{{ worldwide['TotalConfirmed'] }}</h2>
+          <p>TOTAL CASES</p>
+        </div>
+        <div class="recovered ad-box">
+          <h2>{{ worldwide['TotalRecovered']}}</h2>
+          <p>RECOVERED</p>
+        </div>
+        <div class="deaths ad-box">
+          <h2>{{ worldwide['TotalDeaths'] }}</h2>
+          <p>DEATHS</p>
+        </div>
+      </div>
+      <div class="chart-info">
+        <div class="chart">
+          <canvas id="myChart" width="100" height="100"></canvas>
+          <script>
+            var ctx = document.getElementById('myChart');
+            var myChart = new Chart(ctx, {
+              type: 'pie',
+              data: {
+                labels: ['Confirmed', 'Recovered', 'Deaths'],
+                datasets: [{
+                  label: '# of Votes',
+                  data: [{{ worldwide['TotalConfirmed'] }}, {{ worldwide['TotalRecovered'] }}, {{ worldwide['TotalDeaths'] }}],
+            backgroundColor: [
+              'rgba(54, 162, 235, 0.6)',
+              'rgba(75, 192, 192, 0.6)',
+              'rgba(255, 99, 132, 0.6)',
+
+            ],
+              borderColor: [
+                'rgba(54, 162, 235, 1)',
+                'rgba(21, 117, 116, 1)',
+                'rgba(255, 99, 132, 1)',
+
+              ],
+                borderWidth: 1
+                }]
+              },
+            });
+          </script>
+        </div>
+        <div class="info">
+          <p>Recovery percentage: {{ recovery_perc }}%</p>
+          <p>Death percentage: {{ deaths_perc}}%</p>
+        </div>
+      </div>
+    </div>
+    <!--------------------------------- SECOND SECTION -------------------------------->
+    <div class="country-stats">
+      <div class="search-country">
+        <p class="title">Search by country name</p>
+        <form action="/byCountry" method="POST">
+          <input type="text" name="nation"><button>Search</button>
+        </form>
+      </div>
+      <div class="top-countries">
+        <p class="top-countries-title">MOST AFFECTED COUNTRIES</p>
+        <div class="top-20">
+          <ol start="1">
+            {% for country in tcountries[:10] %}
+            <li>
+              <h6>{{ country[0] }}</h6>
+              <p>{{ country[1] }} cases</p>
+            </li>
+            <hr />
+            {% endfor %}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer></footer>
+</body>
+
+</html>
