@@ -3,65 +3,92 @@ import requests
 import json
 
 app = Flask(__name__)
-
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    all_data = requests.get('https://api.covid19api.com/summary')
-    saveData(all_data.json())
+    try:
+        all_data = requests.get('https://api.covid19api.com/summary')
+        # saveData(all_data.json(), 'generaldata.json')       # saving the latest data incase api goes down
+        ww_stats = all_data.json()['Global']
+        countries = all_data.json()['Countries']
+    except:
+        with open('generaldata.json', 'r') as json_file:
+            all_data = json.load(json_file)
+            ww_stats = all_data['Global']
+            countries = all_data['Countries']
 
-    # if the api is taken down or stops responding uncomment the following two lines inorder to use the saved dummy data in .json files
-    # with open('generaldata.json', 'r') as json_file:
-    #     all_data = json.load(json_file)
+    rp = int((ww_stats['TotalRecovered'] / ww_stats['TotalConfirmed']) * 100)
+    dp = int((ww_stats['TotalDeaths'] / ww_stats['TotalConfirmed']) * 100)
 
-    ww_stats = all_data.json()['Global']
-    # ww_stats = all_data['Global']
-    rp = int((ww_stats['TotalRecovered']/ww_stats['TotalConfirmed'])*100)
-    dp = int((ww_stats['TotalDeaths']/ww_stats['TotalConfirmed'])*100)
+    c_cases = {x['Country']: x['TotalConfirmed'] for x in countries}
 
-    countries = all_data.json()['Countries']
-    # countries = all_data['Countries']
-    c_to_cases = {}
-    top_countries_data = []
-    for index in range(len(countries)):
-        country = countries[index]['Country']
-        cases = countries[index]['TotalConfirmed']
-        c_to_cases.update({country: cases})
-    keys = list(c_to_cases.keys())
-    values = list(c_to_cases.values())
+    top_countries = dict(sorted(c_cases.items(), key=lambda c_cases: c_cases[1], reverse=True))     # sorting based on number of cases
+    top_countries = {k: top_countries[k] for k in list(top_countries)[:10]}     # picking only first 10
+    params = {
+        'ww_total_conf': ww_stats['TotalConfirmed'],
+        'ww_total_rec': ww_stats['TotalRecovered'],
+        'ww_total_dea': ww_stats['TotalDeaths'],
+        'recovery_perc': rp,
+        'deaths_perc': dp,
+        'tcountries': top_countries
+    }
 
-    for i in range(20):
-        ndx = values.index(max(values))
-        key = keys[ndx]
-        top_countries_data.append((key, max(values)))
-        keys.remove(key)
-        values.remove(max(values))
-
-    return render_template('index.html', worldwide=ww_stats, recovery_perc=rp, deaths_perc=dp, tcountries=top_countries_data)
+    return render_template('index.html', params=params)
 
 
 @app.route('/byCountry', methods=['GET', 'POST'])
 def byCountry():
     country = request.form['nation']
-    country = country[:1].upper()+country[1:]
-    all_data = requests.get('https://api.covid19api.com/country/'+country)
-    all_data = all_data.json()
-    
-    # if the api is taken down or stops responding uncomment the following two lines inorder to use the saved dummy data in .json files
-    # with open('countrydata.json','r') as json_file:
-    # all_data = json.load(json_file)
+    country = country[:1].upper() + country[1:]
+
+    try:
+        all_data = requests.get('https://api.covid19api.com/country/' + country)
+        print(all_data.json())
+        # saveData(all_data.json(), 'countrydata.json')
+        all_data = all_data.json()
+    except:
+        with open('countrydata.json','r') as json_file:
+            all_data = json.load(json_file)
+
+    confirmed = []
+    deaths = []
+    recovered = []
+    for i, day in enumerate(all_data):
+        if day['Confirmed'] == 0 :
+            pass
+        else:
+            if i % 3 == 0:
+                confirmed.append({'x': day['Date'][:10], 'y': day['Confirmed']})
+                recovered.append({'x': day['Date'][:10], 'y': day['Recovered']})
+                deaths.append({'x': day['Date'][:10], 'y': day['Deaths']})
+
+    d = {
+        'confirmed': confirmed,
+        'recovered': recovered,
+        'deaths': deaths
+    }
 
     latest_data = all_data[-1]
-    rperc = int((latest_data['Recovered']/latest_data['Confirmed'])*100)
-    dperc = int((latest_data['Deaths']/latest_data['Confirmed'])*100)
+    rp = int((latest_data['Recovered']/latest_data['Confirmed'])*100)
+    dp = int((latest_data['Deaths']/latest_data['Confirmed'])*100)
 
-    return render_template('country.html', country=country, latest=latest_data, rperc=rperc, dperc=dperc)
+    params = {
+        'country': country,
+        'latest_conf': latest_data['Confirmed'],
+        'latest_rec': latest_data['Recovered'],
+        'latest_act': latest_data['Active'],
+        'latest_dea': latest_data['Deaths'],
+        'recovery_perc': rp,
+        'deaths_perc': dp
+    }
+
+    return render_template('country.html', detailed=json.dumps(d), params=params)
 
 
-def saveData(pointer):
-    with open('generaldata.json', 'w') as jsonfile:
-        json.dump(pointer, jsonfile)
-
+def saveData(dump, file):
+    with open(file, 'w') as jsonfile:
+        json.dump(dump, jsonfile)
 
 if __name__ == '__main__':
     app.config['TEMPLATES_AUTO_RELOAD'] = True

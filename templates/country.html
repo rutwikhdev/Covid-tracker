@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="../static/css/country.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 </head>
 
@@ -15,67 +16,109 @@
     </header>
     <main>
         <div class="info section">
-            <h3>{{ country }}</h3>
+            <h3>{{ params["country"] }}</h3>
             <div class="sub-section">
                 <div class="boxes">
-                    <h4>{{ latest['Confirmed'] }}</h4>
-                    <p>Total Cases</p>
+                    <p>Total Cases</p><h4>{{ params['latest_conf'] }}</h4>
                 </div>
                 <div class="boxes">
-                    <h4>{{ latest['Recovered'] }}</h4>
-                    <p>Total Recovered</p>
+                    <p>Total Recovered</p><h4>{{ params['latest_rec'] if params['latest_rec'] != 0 else "N.A."}}</h4>
                 </div>
                 <div class="boxes">
-                    <h4>{{ latest['Active'] }}</h4>
-                    <p>Active Cases</p>
+                    <p>Active Cases</p><h4>{{ params['latest_act'] }}</h4>
                 </div>
                 <div class="boxes">
-                    <h4>{{ latest['Deaths'] }}</h4>
-                    <p>Deaths</p>
+                    <p>Deaths</p><h4>{{ params['latest_dea'] }}</h4>
                 </div>
             </div>
-            <p>RECOVERY RATE: {{ rperc }}%</p>
-            <p>DEATH RATE: {{ dperc }}%</p>
+            <p>RECOVERY RATE: {{ params['recovery_perc'] }}%</p>
+            <p>DEATH RATE: {{ params['deaths_perc'] }}%</p>
+
         </div>
         <div class="graph section">
-            <canvas id="myChart" width="400" height="400"></canvas>
-            <script>
-                var ctx = document.getElementById('myChart');
-                var myChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Confirmed', 'Recovered', 'Active', 'Deaths'],
-                        datasets: [{
-                            label: 'Total number',
-                            data: [{{ latest['Confirmed']}}, {{ latest['Recovered']}}, {{ latest['Active'] }}, {{ latest['Deaths'] }}],
-                            backgroundColor: [
-                                'rgba(255, 206, 86, 0.6)',
-                                'rgba(75, 192, 192, 0.6)',
-                                'rgba(54, 162, 235, 0.6)',
-                                'rgba(255, 99, 132, 0.6)',
-                            ],
-                            borderColor: [
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 99, 132, 1)',
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero: true
-                                }
-                            }]
-                        }
-                    }
-                });
-            </script>
+            <canvas id="myChart1"></canvas>
         </div>
     </main>
+    <h2 id="monthly-stats">Monthly Statistics</h2>
+    <canvas id="myChart2"></canvas>
+    <script>
+        var ctx = document.getElementById('myChart1');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Confirmed', 'Recovered', 'Active', 'Deaths'],
+                datasets: [{
+                    label: 'Total number',
+                    data: [{{ params['latest_conf']}}, {{ params['latest_rec'] }}, {{ params['latest_act'] }}, {{ params['latest_dea'] }}],
+                    backgroundColor: [
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 99, 132, 0.6)',
+                    ],
+                    borderColor: [
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 99, 132, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+        var data = JSON.parse('{{ detailed | safe}}');
+
+        var s1 = {
+          label: 'Confirmed',
+          borderColor: '#4285F4',
+          data: data["confirmed"]
+        };
+        var s2 = {
+          label: 'Recovered',
+          borderColor: '#008889',
+          data: data["recovered"]
+        };
+        var s3 = {
+          label: 'Deaths',
+          borderColor: '#FE3636',
+          data: data["deaths"]
+        };
+
+        var ctx = document.getElementById('myChart2').getContext("2d");
+        var chart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            datasets: [s1, s2, s3],
+            type: 'line',
+            pointRadius: 0,
+            fill: false,
+            lineTension: 0,
+            borderWidth: 2},
+          options: {
+            scales: {
+              xAxes: [{
+                type: 'time',
+                // distribution: 'series',
+                time: {
+                  unit: 'month'
+                }
+              }]
+            }
+          }
+        });
+    </script>
 </body>
 
 </html>
